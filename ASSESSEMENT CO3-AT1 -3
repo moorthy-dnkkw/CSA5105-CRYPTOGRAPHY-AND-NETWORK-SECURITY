@@ -1,0 +1,83 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOle9ahZjtW4tXZ1UIOdLix",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/moorthy-dnkkw/CSA5105-CRYPTOGRAPHY-AND-NETWORK-SECURITY/blob/main/ASSESSEMENT%20CO3-AT1%20-3\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import hashlib\n",
+        "import hmac\n",
+        "\n",
+        "message = \"Transfer Rs.1000\"\n",
+        "\n",
+        "key = b\"secretkey\"\n",
+        "\n",
+        "# Simple hash\n",
+        "simple_hash = hashlib.sha256(message.encode()).hexdigest()\n",
+        "\n",
+        "# HMAC\n",
+        "hmac_value = hmac.new(\n",
+        "    key,\n",
+        "    message.encode(),\n",
+        "    hashlib.sha256\n",
+        ").hexdigest()\n",
+        "\n",
+        "print(\"Message:\", message)\n",
+        "print(\"Simple SHA-256:\", simple_hash)\n",
+        "print(\"HMAC-SHA256:\", hmac_value)\n",
+        "\n",
+        "# Verify HMAC\n",
+        "check = hmac.compare_digest(\n",
+        "    hmac_value,\n",
+        "    hmac.new(key, message.encode(), hashlib.sha256).hexdigest()\n",
+        ")\n",
+        "\n",
+        "print(\"HMAC Verification:\", check)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "FD1WgvfA28QF",
+        "outputId": "0f64548f-ad76-4837-c8eb-ee00cf87c78e"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Message: Transfer Rs.1000\n",
+            "Simple SHA-256: f474ae266e4d8985d8a5518748496230b70beb75f37b6f6ded170dd0eb30f55f\n",
+            "HMAC-SHA256: 1a3f68ae2cbae647853e32aa7c81c922377817c12eae96dd1067d6fb91b255da\n",
+            "HMAC Verification: True\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
