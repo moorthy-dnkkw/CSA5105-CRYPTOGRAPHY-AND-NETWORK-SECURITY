@@ -1,0 +1,71 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOwSXBNKSSenFGkTqzHSatu",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/moorthy-dnkkw/CSA5105-CRYPTOGRAPHY-AND-NETWORK-SECURITY/blob/main/ASSESSEMENT%20CO3-AT1%20-1\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import hashlib\n",
+        "import time\n",
+        "\n",
+        "messages = [\n",
+        "    \"Hello World\",\n",
+        "    \"Hello Python\",\n",
+        "    \"Cyber Security\",\n",
+        "    \"Hello World\",\n",
+        "    \"123456789\"\n",
+        "]\n",
+        "\n",
+        "print(\"MD5 and SHA-256 Comparison\\n\")\n",
+        "\n",
+        "for message in messages:\n",
+        "\n",
+        "    # MD5\n",
+        "    start = time.perf_counter()\n",
+        "    md5_hash = hashlib.md5(message.encode()).hexdigest()\n",
+        "    md5_time = time.perf_counter() - start\n",
+        "\n",
+        "    # SHA-256\n",
+        "    start = time.perf_counter()\n",
+        "    sha256_hash = hashlib.sha256(message.encode()).hexdigest()\n",
+        "    sha256_time = time.perf_counter() - start\n",
+        "\n",
+        "    print(\"Message:\", message)\n",
+        "    print(\"MD5    :\", md5_hash)\n",
+        "    print(\"SHA-256:\", sha256_hash)\n",
+        "    print(\"MD5 Time    :\", md5_time)\n",
+        "    print(\"SHA-256 Time:\", sha256_time)\n",
+        "    print(\"-\" * 60)"
+      ],
+      "metadata": {
+        "id": "juKotKtr3euo"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
