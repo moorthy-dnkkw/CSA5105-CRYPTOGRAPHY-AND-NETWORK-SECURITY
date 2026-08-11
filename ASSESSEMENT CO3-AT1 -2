@@ -1,0 +1,99 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPeYj/VwH2qRuGB9oQgbIuN",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/moorthy-dnkkw/CSA5105-CRYPTOGRAPHY-AND-NETWORK-SECURITY/blob/main/ASSESSEMENT%20CO3-AT1%20-2\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import hashlib\n",
+        "\n",
+        "# RSA public/private parameters\n",
+        "p = 61\n",
+        "q = 53\n",
+        "\n",
+        "n = p * q\n",
+        "phi = (p - 1) * (q - 1)\n",
+        "\n",
+        "e = 17\n",
+        "d = 2753\n",
+        "\n",
+        "def hash_message(message):\n",
+        "    return int(hashlib.sha256(message.encode()).hexdigest(), 16)\n",
+        "\n",
+        "def sign(message):\n",
+        "    h = hash_message(message)\n",
+        "    return pow(h, d, n)\n",
+        "\n",
+        "def verify(message, signature):\n",
+        "    h = hash_message(message)\n",
+        "    recovered_hash = pow(signature, e, n)\n",
+        "\n",
+        "    return recovered_hash == h % n\n",
+        "\n",
+        "\n",
+        "# Message\n",
+        "message = \"This is a secret message\"\n",
+        "\n",
+        "# Generate signature\n",
+        "signature = sign(message)\n",
+        "\n",
+        "print(\"Message:\", message)\n",
+        "print(\"Signature:\", signature)\n",
+        "\n",
+        "# Verify original message\n",
+        "print(\"Verification:\", verify(message, signature))\n",
+        "\n",
+        "# Modify message\n",
+        "modified_message = \"This is a modified message\"\n",
+        "\n",
+        "print(\"Modified Message:\", modified_message)\n",
+        "print(\"Verification:\", verify(modified_message, signature))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "B2bON_fA2L_Q",
+        "outputId": "72f8e1d7-7454-41e6-e33c-97a9166c48a3"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Message: This is a secret message\n",
+            "Signature: 2535\n",
+            "Verification: True\n",
+            "Modified Message: This is a modified message\n",
+            "Verification: False\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
