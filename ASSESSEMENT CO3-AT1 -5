@@ -1,0 +1,118 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMeW8PmiChuAolP6niXsmJK",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/moorthy-dnkkw/CSA5105-CRYPTOGRAPHY-AND-NETWORK-SECURITY/blob/main/ASSESSEMENT%20CO3-AT1%20-5\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import hashlib\n",
+        "\n",
+        "# Small demonstration values\n",
+        "p = 467\n",
+        "g = 2\n",
+        "\n",
+        "# Private key\n",
+        "x = 127\n",
+        "\n",
+        "# Public key\n",
+        "y = pow(g, x, p)\n",
+        "\n",
+        "def hash_message(message):\n",
+        "    return int(\n",
+        "        hashlib.sha256(message.encode()).hexdigest(),\n",
+        "        16\n",
+        "    )\n",
+        "\n",
+        "def sign(message):\n",
+        "    h = hash_message(message)\n",
+        "\n",
+        "    # Choose k such that gcd(k, p-1) = 1\n",
+        "    k = 3\n",
+        "\n",
+        "    # r = g^k mod p\n",
+        "    r = pow(g, k, p)\n",
+        "\n",
+        "    # Find inverse of k modulo p-1\n",
+        "    k_inverse = pow(k, -1, p - 1)\n",
+        "\n",
+        "    # s = k^-1(h - xr) mod (p-1)\n",
+        "    s = (k_inverse * (h - x * r)) % (p - 1)\n",
+        "\n",
+        "    return r, s\n",
+        "\n",
+        "\n",
+        "def verify(message, signature):\n",
+        "    r, s = signature\n",
+        "\n",
+        "    h = hash_message(message)\n",
+        "\n",
+        "    left = (pow(y, r, p) * pow(r, s, p)) % p\n",
+        "    right = pow(g, h, p)\n",
+        "\n",
+        "    return left == right\n",
+        "\n",
+        "\n",
+        "message = \"Hello ElGamal\"\n",
+        "\n",
+        "signature = sign(message)\n",
+        "\n",
+        "print(\"Message:\", message)\n",
+        "print(\"Public Key:\", y)\n",
+        "print(\"Signature:\", signature)\n",
+        "\n",
+        "print(\"Verification:\", verify(message, signature))\n",
+        "\n",
+        "modified = \"Modified message\"\n",
+        "\n",
+        "print(\"Modified Message:\", modified)\n",
+        "print(\"Verification:\", verify(modified, signature))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "4yZDto913U1N",
+        "outputId": "8da99be9-ce5d-4d88-9a19-446b19851ace"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Message: Hello ElGamal\n",
+            "Public Key: 132\n",
+            "Signature: (8, 17)\n",
+            "Verification: True\n",
+            "Modified Message: Modified message\n",
+            "Verification: False\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
