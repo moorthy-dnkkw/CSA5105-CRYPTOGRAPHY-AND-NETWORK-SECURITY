@@ -1,0 +1,119 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPVI5usjbqt/5V6ao7HeYX6",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/moorthy-dnkkw/CSA5105-CRYPTOGRAPHY-AND-NETWORK-SECURITY/blob/main/ASSESSEMENT%20CO3-AT1%20-4\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import hashlib\n",
+        "import time\n",
+        "import hmac\n",
+        "\n",
+        "# Secret keys\n",
+        "client_key = b\"client_secret\"\n",
+        "server_key = b\"server_secret\"\n",
+        "\n",
+        "def create_ticket(username):\n",
+        "    timestamp = str(int(time.time()))\n",
+        "\n",
+        "    data = username + \"|\" + timestamp\n",
+        "\n",
+        "    ticket = hmac.new(\n",
+        "        server_key,\n",
+        "        data.encode(),\n",
+        "        hashlib.sha256\n",
+        "    ).hexdigest()\n",
+        "\n",
+        "    return username, timestamp, ticket\n",
+        "\n",
+        "\n",
+        "def validate_ticket(username, timestamp, ticket):\n",
+        "    current_time = int(time.time())\n",
+        "    ticket_time = int(timestamp)\n",
+        "\n",
+        "    # Ticket valid for 30 seconds\n",
+        "    if current_time - ticket_time > 30:\n",
+        "        return False\n",
+        "\n",
+        "    data = username + \"|\" + timestamp\n",
+        "\n",
+        "    expected_ticket = hmac.new(\n",
+        "        server_key,\n",
+        "        data.encode(),\n",
+        "        hashlib.sha256\n",
+        "    ).hexdigest()\n",
+        "\n",
+        "    return hmac.compare_digest(ticket, expected_ticket)\n",
+        "\n",
+        "\n",
+        "# Client requests a ticket\n",
+        "username = \"Alice\"\n",
+        "\n",
+        "username, timestamp, ticket = create_ticket(username)\n",
+        "\n",
+        "print(\"Username:\", username)\n",
+        "print(\"Timestamp:\", timestamp)\n",
+        "print(\"Ticket:\", ticket)\n",
+        "\n",
+        "# Server validates ticket\n",
+        "if validate_ticket(username, timestamp, ticket):\n",
+        "    print(\"Authentication Successful\")\n",
+        "else:\n",
+        "    print(\"Authentication Failed\")\n",
+        "\n",
+        "# Simulate expired ticket\n",
+        "old_timestamp = str(int(time.time()) - 40)\n",
+        "\n",
+        "if validate_ticket(username, old_timestamp, ticket):\n",
+        "    print(\"Old ticket accepted\")\n",
+        "else:\n",
+        "    print(\"Old ticket rejected\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "6MM1BmiE31Fs",
+        "outputId": "6e3f88d3-2c25-4549-b544-2a52664cd6b6"
+      },
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Username: Alice\n",
+            "Timestamp: 1786435822\n",
+            "Ticket: 98e171fda8374643832b5aa8954880d0e390755a7d66caf579f0933bcff77b2b\n",
+            "Authentication Successful\n",
+            "Old ticket rejected\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
